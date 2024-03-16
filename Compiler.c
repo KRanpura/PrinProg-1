@@ -97,7 +97,7 @@ static int variable()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register(); //get next available register
-	CodeGen(LOAD, reg, to_identifier(token), EMPTY_FIELD);
+	CodeGen(LOAD, reg, token - 'a', EMPTY_FIELD);
 	next_token(); //advance to next token
 	return reg; 
 }
@@ -192,7 +192,7 @@ static void print()
 	}
 	next_token();
 	reg = variable();
-	CodeGen(PRINT, reg, EMPTY_FIELD, EMPTY_FIELD);
+	CodeGen(WRITE, reg, EMPTY_FIELD, EMPTY_FIELD);
 }
 
 static void stmt()
@@ -281,16 +281,6 @@ static inline int to_digit(char c)
 	if (is_digit(c))
 		return c - '0';
 	WARNING("Non-digit passed to %s, returning zero\n", __func__);
-	return 0;
-}
-
-static inline int to_identifier(char c)
-{
-	if (is_identifier(c))       //convert a char that is either a, b, c, d, e, or f to an int
-	{
-		return c - 'a';
-	}
-	WARNING("Non-identifier passed to %s, returning zero\n", __func__);
 	return 0;
 }
 
