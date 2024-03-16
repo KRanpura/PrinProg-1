@@ -83,7 +83,7 @@ static int digit()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();  //get next available register
-	CodeGen(LOADI, reg, to_digit(token), EMPTY_FIELD); //load result to register for processing
+	CodeGen(LOADI, reg, '#', to_digit(token)); //load result to register for processing
 	next_token(); //advance to next token in token stream
 	return reg;
 }
