@@ -180,8 +180,9 @@ static void read()
         exit(EXIT_FAILURE);
     }
 	next_token();
+	char var = token;
 	reg = variable();
-	CodeGen(READ, reg, EMPTY_FIELD, EMPTY_FIELD);
+	CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
 }
 
 // <print> ::= % <variable>
