@@ -83,7 +83,7 @@ static int digit()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register();  //get next available register
-	CodeGen(LOAD, reg, to_digit(token), EMPTY_FIELD); //load result to register for processing
+	CodeGen(LOADI, reg, to_digit(token), EMPTY_FIELD); //load result to register for processing
 	next_token(); //advance to next token in token stream
 	return reg;
 }
@@ -97,7 +97,7 @@ static int variable()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register(); //get next available register
-	CodeGen(LOADI, reg, token - 'a', EMPTY_FIELD);
+	CodeGen(LOAD, reg, token, EMPTY_FIELD);
 	next_token(); //advance to next token
 	return reg; 
 }
@@ -134,7 +134,8 @@ static int expr()
 	case 'd': 
 	case 'e':
 	case 'f': 
-		return variable();
+		//return variable();
+		variable(); break;
 	case '0':
 	case '1':
 	case '2':
@@ -145,7 +146,8 @@ static int expr()
 	case '7':
 	case '8':
 	case '9':
-		return digit();
+		// return digit();
+		digit(); break;
 	default:
 		ERROR("Symbol %c unknown\n", token);
 		exit(EXIT_FAILURE);
@@ -156,6 +158,7 @@ static int expr()
 static void assign()
 {
 	int id, reg;
+	char var = token;
 	id = variable();
 	if (token != '=')
 	{
@@ -164,7 +167,7 @@ static void assign()
 	}
 	next_token();
 	reg = expr();
-	CodeGen(STORE, id, reg, EMPTY_FIELD);
+	CodeGen(STORE, var, reg, EMPTY_FIELD); //replaced id with token
 }
 
 //  <read> 	::= ? <variable>
@@ -191,16 +194,30 @@ static void print()
         exit(EXIT_FAILURE);
 	}
 	next_token();
-	reg = variable();
-	CodeGen(WRITE, reg, EMPTY_FIELD, EMPTY_FIELD);
+	char var = token;
+	//reg = variable();
+	next_token();
+	CodeGen(WRITE, var, EMPTY_FIELD, EMPTY_FIELD);
 }
 
 static void stmt()
 {
-	switch(token) {
-		case '?': read(); break;
-		case '%': print(); break;
-		default: assign();
+	if (token == '?')
+	{
+		read();
+	}
+	else if (token == '%')
+	{
+		print();
+	}
+	else if (is_identifier(token) && *(buffer+1) == '=')
+	{
+		assign();
+	}
+	else
+	{
+		ERROR("Expected ?, \"%%\", or = for stmt");
+		exit(EXIT_FAILURE);
 	}
 }
 
