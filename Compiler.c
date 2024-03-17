@@ -97,7 +97,7 @@ static int variable()
 		exit(EXIT_FAILURE);
 	}
 	reg = next_register(); //get next available register
-	CodeGen(LOAD, reg, token - 'a', EMPTY_FIELD);
+	CodeGen(LOADI, reg, token - 'a', EMPTY_FIELD);
 	next_token(); //advance to next token
 	return reg; 
 }
