@@ -159,7 +159,8 @@ static void assign()
 {
 	int id, reg;
 	char var = token;
-	id = variable();
+	//id = variable();
+	next_token();
 	if (token != '=')
 	{
 		ERROR("Expected '=' for assign statement\n");
@@ -173,7 +174,7 @@ static void assign()
 //  <read> 	::= ? <variable>
 static void read()
 {
-	int reg;
+	//int reg;
 	if (token != '?') 
 	{
         ERROR("Expected '?' for read statement\n");
@@ -181,8 +182,9 @@ static void read()
     }
 	next_token();
 	char var = token;
-	reg = variable();
+	//reg = variable();
 	CodeGen(READ, token, EMPTY_FIELD, EMPTY_FIELD);
+	next_token();
 }
 
 // <print> ::= % <variable>
